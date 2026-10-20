@@ -1,4 +1,4 @@
-/* s4cvl.dev — intro plein écran, copie du pseudo Discord, année du footer.
+/* s4cvl.dev — intro terminal, copie du pseudo Discord, année du footer.
    Chargé de façon synchrone dans <head> : la classe .intro doit être posée avant le premier rendu. */
 (function () {
   'use strict';
@@ -13,21 +13,22 @@
   // Pas d'intro si l'utilisateur ne veut pas d'animation ou arrive sur une ancre (#projets…).
   var playIntro = !reduceMotion && !window.location.hash;
 
-  // Filet de sécurité : quoi qu'il arrive, l'écran d'intro disparaît au bout de 3 s.
+  // Filet de sécurité : quoi qu'il arrive, l'écran d'intro disparaît au bout de 8 s.
   var failsafe = null;
   if (playIntro) {
     root.classList.add('intro');
-    failsafe = window.setTimeout(function () { root.classList.remove('intro'); }, 3000);
+    failsafe = window.setTimeout(function () { root.classList.remove('intro'); }, 8000);
   }
 
-  /* ---------- Intro plein écran ---------- */
+  /* ---------- Intro terminal ---------- */
 
-  var TYPE_DELAY = 40;   // ms par caractère de la commande
-  var CMD_PAUSE = 120;   // pause après la commande, avant la réponse
-  var LINE_DELAY = 170;  // ms entre chaque ligne de sortie
-  var HOLD = 250;        // temps de lecture du « pong » avant de partir
-  var FADE = 350;        // durée du fondu de sortie (cf. .intro-screen dans style.css)
-  // 14 × 40 + 120 + 4 × 170 + 250 + 350 ≈ 1,96 s
+  var START_DELAY = 400; // le terminal s'affiche, curseur seul, avant la frappe
+  var TYPE_DELAY = 85;   // ms par caractère de la commande
+  var CMD_PAUSE = 450;   // pause après la commande, avant la réponse
+  var LINE_DELAY = 380;  // ms entre chaque ligne de sortie
+  var HOLD = 1800;       // temps de lecture de l'écran final avant de partir
+  var FADE = 500;        // durée du fondu de sortie (cf. .intro-screen dans style.css)
+  // 400 + 14 × 85 + 450 + 4 × 380 + 1800 + 500 ≈ 5,9 s
 
   var SKIP_EVENTS = ['pointerdown', 'keydown', 'wheel', 'touchstart'];
 
@@ -75,7 +76,7 @@
       window.addEventListener(type, leave, { capture: true, passive: true });
     });
 
-    typeChar(1);
+    step(function () { typeChar(1); }, START_DELAY);
   }
 
   function finish() {

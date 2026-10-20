@@ -88,27 +88,62 @@ a { color: var(--accent); }
   position: fixed;
   inset: 0;
   z-index: 100;
-  flex-direction: column;
+  align-items: center;
   justify-content: center;
-  padding: 24px max(var(--gutter), 6vw);
-  background: var(--code);
-  border-left: 4px solid var(--accent);
-  font-family: var(--font-mono);
-  font-size: clamp(0.875rem, 2.4vw, 1.5rem);
-  line-height: 1.7;
-  transition: opacity 350ms ease;
+  padding: var(--gutter);
+  background: var(--bg);
+  transition: opacity 500ms ease;
 }
 .intro .intro-screen { display: flex; }
 .intro .intro-screen.is-leaving { opacity: 0; }
 .intro body { overflow: hidden; }
 
-.intro-screen__term { max-width: 52ch; }
+/* Fenêtre de terminal centrée, ~2/3 de l'écran */
+.intro-term {
+  display: flex;
+  flex-direction: column;
+  width: 66.667vw;
+  height: 66.667vh;
+  min-height: 280px;
+  background: var(--code);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
+  font-family: var(--font-mono);
+  font-size: clamp(0.75rem, 1.5vw, 1.375rem);
+  line-height: 1.7;
+  overflow: hidden;
+}
+@media (max-width: 640px) {
+  .intro-term { width: 100%; }
+}
+
+.intro-term__bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+.intro-term__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--border);
+}
+.intro-term__name { margin-left: 8px; }
+
+.intro-term__body { padding: clamp(16px, 3vw, 32px); }
 
 .intro-screen__hint {
   position: absolute;
   right: var(--gutter);
   bottom: 16px;
   margin: 0;
+  font-family: var(--font-mono);
   font-size: 0.75rem;
   color: var(--text-muted);
 }
@@ -156,9 +191,8 @@ a { color: var(--accent); }
 
 .topbar__id {
   display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 2px 16px;
+  flex-direction: column;
+  gap: 2px;
   min-width: 0;
 }
 
@@ -173,8 +207,59 @@ a { color: var(--accent); }
 
 .topbar__bio {
   margin: 0;
-  font-size: 0.9375rem;
+  font-size: 0.875rem;
+  line-height: 1.4;
   color: var(--text-muted);
+}
+
+.topbar__nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+/* ---------- Contact ---------- */
+.contact {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 44px;
+  padding: 0 14px;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--text);
+  text-decoration: none;
+  background: var(--surface);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-sm);
+  transition: background-color 150ms ease, color 150ms ease;
+}
+.contact:hover {
+  color: var(--code);          /* 6.5:1 sur --accent */
+  background: var(--accent);
+}
+
+.contact__icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.contact:hover .contact__icon { stroke: currentColor; }
+
+/* Sur petit écran, l'adresse se réduit à l'icône (l'aria-label garde l'adresse) */
+@media (max-width: 479px) {
+  .contact {
+    width: 44px;
+    padding: 0;
+    justify-content: center;
+  }
+  .contact__label { display: none; }
 }
 
 /* ---------- Plateformes (icônes) ---------- */
@@ -290,7 +375,8 @@ a { color: var(--accent); }
   border-radius: var(--radius);
   transition: border-color 150ms ease, transform 150ms ease;
 }
-.project-card:hover {
+/* Seules les cartes avec un lien réagissent au survol */
+.project-card:has(.project-card__link):hover {
   border-color: var(--accent-soft);
   border-left-color: var(--accent);
   transform: translateY(-2px);
@@ -335,6 +421,25 @@ a { color: var(--accent); }
   font-size: 0.8125rem;
   color: var(--accent);       /* 5.0:1 sur --surface */
 }
+.project-card__private {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: auto;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+}
+.project-card__lock {
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
 .project-card:hover .project-card__cta {
   text-decoration: underline;
   text-underline-offset: 3px;
@@ -381,7 +486,8 @@ a { color: var(--accent); }
 @media (prefers-reduced-motion: reduce) {
   .t-cursor { animation: none; }
   .intro-screen,
+  .contact,
   .platform,
   .project-card { transition: none; }
-  .project-card:hover { transform: none; }
+  .project-card:has(.project-card__link):hover { transform: none; }
 }
