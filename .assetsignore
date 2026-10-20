@@ -1,0 +1,8 @@
+# Fichiers à ne pas publier (le dossier d'assets est la racine du repo)
+.git
+.wrangler
+node_modules
+.gitignore
+.assetsignore
+wrangler.jsonc
+README.md
