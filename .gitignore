@@ -1,0 +1,15 @@
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Éditeurs
+.vscode/
+.idea/
+*.swp
+
+# Cloudflare / outils locaux
+.wrangler/
+.dev.vars
+node_modules/
+*.log
