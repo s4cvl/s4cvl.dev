@@ -9,7 +9,7 @@ Site 100 % statique, sans build step : HTML + CSS + JS vanilla.
 .
 ├── index.html          # page unique (intro, barre du haut + plateformes, projets, footer)
 ├── css/style.css       # tous les styles, tokens de couleurs en tête de fichier
-├── js/main.js          # intro plein écran, copie du pseudo Discord, année du footer
+├── js/main.js          # intro terminal, copie du pseudo Discord, année du footer
 ├── favicon.svg
 ├── og-image.png        # image Open Graph / Twitter Card (1200×630)
 ├── site.webmanifest
@@ -24,24 +24,27 @@ polices de repli système prennent le relais.
 
 Ouvrir `index.html` directement dans un navigateur, rien d'autre à faire.
 
-## Intro plein écran
+## Intro terminal
 
-Un écran terminal plein écran tape `ping s4cvl.dev`, affiche la réponse jusqu'au
+Une fenêtre de terminal centrée (~2/3 de l'écran) tape `ping s4cvl.dev`, affiche la réponse jusqu'au
 « pong. Bienvenue chez moi. », puis disparaît en fondu sur le site.
 `js/main.js` est chargé de façon synchrone dans le `<head>` pour poser la classe `.intro` avant le
 premier rendu. L'intro :
 
-- dure ~2 s, fondu compris (délais réglables en tête de la section intro de `main.js`) ;
+- dure ~6 s, fondu compris, dont ~2 s de pause sur l'écran final (délais réglables en tête de la section intro de `main.js`) ;
 - se passe au clic, à la molette, au toucher ou au clavier ;
 - n'est pas jouée si `prefers-reduced-motion: reduce` ou si l'URL contient une ancre ;
-- disparaît de force au bout de 3 s si quelque chose se passe mal ;
+- disparaît de force au bout de 8 s si quelque chose se passe mal ;
 - sans JS, l'écran d'intro n'existe pas : le site s'affiche directement.
 
 ## Ajouter un projet
 
 Copier un bloc `<li><article class="project-card">…</article></li>` dans `.project-grid`.
-Le lien du titre (`.project-card__link`) rend toute la carte cliquable.
-Les `<!-- TODO -->` du HTML marquent les URLs et stacks à compléter.
+
+- **Projet public** : mettre le titre dans un `<a class="project-card__link">` (toute la carte devient
+  cliquable) et terminer par `<span class="project-card__cta">→ …</span>` (voir la carte Roblox).
+- **Projet privé** : titre en texte simple, terminer par le badge `.project-card__private`
+  (« repo privé »). La carte n'est pas cliquable et ne réagit pas au survol.
 
 ## Déploiement sur Cloudflare Pages
 
