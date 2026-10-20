@@ -1,0 +1,387 @@
+/* ==========================================================================
+   s4cvl.dev
+   ========================================================================== */
+
+/* ---------- Tokens ---------- */
+:root {
+  --bg: #1E1E1E;
+  --surface: #2A2A2A;
+  --code: #141414;
+  --accent: #FF6B00;
+  --accent-soft: rgba(255, 107, 0, 0.35);
+
+  --text: #EDEDED;        /* 12.3:1 sur --surface */
+  --text-muted: #A8A8A8;  /* 5.9:1 sur --surface */
+  --border: #3A3A3A;
+
+  --font-display: "Syne", system-ui, sans-serif;
+  --font-body: "DM Sans", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+
+  --radius: 10px;
+  --radius-sm: 6px;
+  --gutter: 16px;
+  --max: 1040px;
+}
+
+/* ---------- Base ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: var(--accent); }
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.container {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 28px var(--gutter) 40px;
+}
+
+.skip-link {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 10;
+  padding: 8px 12px;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  color: var(--code);
+  background: var(--accent);
+  border-radius: var(--radius-sm);
+  transform: translateY(-200%);
+}
+.skip-link:focus { transform: none; }
+
+/* Liste à tirets orange, réutilisable */
+.dash-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.dash-list li {
+  position: relative;
+  padding-left: 1.25em;
+}
+.dash-list li::before {
+  content: "–";
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+}
+
+/* ---------- Intro plein écran ---------- */
+.intro-screen {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  flex-direction: column;
+  justify-content: center;
+  padding: 24px max(var(--gutter), 6vw);
+  background: var(--code);
+  border-left: 4px solid var(--accent);
+  font-family: var(--font-mono);
+  font-size: clamp(0.875rem, 2.4vw, 1.5rem);
+  line-height: 1.7;
+  transition: opacity 350ms ease;
+}
+.intro .intro-screen { display: flex; }
+.intro .intro-screen.is-leaving { opacity: 0; }
+.intro body { overflow: hidden; }
+
+.intro-screen__term { max-width: 52ch; }
+
+.intro-screen__hint {
+  position: absolute;
+  right: var(--gutter);
+  bottom: 16px;
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.t-line {
+  margin: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.t-prompt,
+.t-accent { color: var(--accent); }
+.t-muted { color: var(--text-muted); }
+
+.t-cursor {
+  display: inline-block;
+  width: 0.6em;
+  height: 1.15em;
+  margin-left: 0.15em;
+  vertical-align: text-bottom;
+  background: var(--accent);
+  animation: blink 1s steps(1) infinite;
+}
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+.intro .t-cmd:not(.is-typing),
+.intro .t-out:not(.is-shown) { display: none; }
+
+/* ---------- Barre du haut ---------- */
+.topbar {
+  border-bottom: 1px solid var(--border);
+}
+
+.topbar__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 24px;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 14px var(--gutter);
+}
+
+.topbar__id {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 16px;
+  min-width: 0;
+}
+
+.topbar__name {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.75rem;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.topbar__bio {
+  margin: 0;
+  font-size: 0.9375rem;
+  color: var(--text-muted);
+}
+
+/* ---------- Plateformes (icônes) ---------- */
+.platforms {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 6px;
+}
+
+.platform {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  font: inherit;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: border-color 150ms ease, color 150ms ease;
+}
+.platform:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.platform__icon {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}
+.platform__icon--stroke {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.copy-buffer {
+  position: fixed;
+  top: 0;
+  left: -9999px;
+  opacity: 0;
+}
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 20px;
+  z-index: 50;
+  margin: 0;
+  padding: 8px 14px;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--text);
+  background: var(--code);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius-sm);
+  transform: translateX(-50%);
+}
+.toast:empty { display: none; }
+
+/* ---------- Sections ---------- */
+.section__prompt {
+  margin: 0 0 2px;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+}
+.prompt__user { color: var(--accent); }
+.prompt__path { color: var(--text); }
+
+.section__title {
+  margin: 0 0 18px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.5rem, 4vw, 1.875rem);
+  letter-spacing: -0.01em;
+}
+
+/* ---------- Projets ---------- */
+.project-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+@media (min-width: 640px) {
+  .project-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (min-width: 960px) {
+  .project-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+.project-card {
+  position: relative;          /* ancre du lien étiré */
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  height: 100%;
+  padding: 18px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius);
+  transition: border-color 150ms ease, transform 150ms ease;
+}
+.project-card:hover {
+  border-color: var(--accent-soft);
+  border-left-color: var(--accent);
+  transform: translateY(-2px);
+}
+.project-card:has(.project-card__link:focus-visible) {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.project-card__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.25rem;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+
+/* Toute la carte est cliquable via un pseudo-élément sur le lien du titre */
+.project-card__link {
+  color: inherit;
+  text-decoration: none;
+}
+.project-card__link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius);
+}
+.project-card__link:focus-visible { outline: none; } /* l'anneau est porté par la carte */
+
+.project-card__pitch {
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  color: var(--text-muted);
+}
+
+.project-card__cta {
+  margin-top: auto;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--accent);       /* 5.0:1 sur --surface */
+}
+.project-card:hover .project-card__cta {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ---------- Tags ---------- */
+.tags {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.tag {
+  padding: 2px 8px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text);
+  background: var(--code);
+  border-radius: 4px;
+}
+.tag::before {
+  content: "#";
+  color: var(--accent);
+}
+
+/* ---------- Footer ---------- */
+.footer {
+  border-top: 1px solid var(--border);
+}
+.footer__inner {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 16px var(--gutter) 24px;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+}
+.footer p { margin: 0; }
+.footer a { text-underline-offset: 3px; }
+
+/* ---------- Motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .t-cursor { animation: none; }
+  .intro-screen,
+  .platform,
+  .project-card { transition: none; }
+  .project-card:hover { transform: none; }
+}
