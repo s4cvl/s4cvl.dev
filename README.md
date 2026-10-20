@@ -33,7 +33,8 @@ premier rendu. L'intro :
 
 - dure ~6 s, fondu compris, dont ~2 s de pause sur l'écran final (délais réglables en tête de la section intro de `main.js`) ;
 - se passe au clic, à la molette, au toucher ou au clavier ;
-- n'est pas jouée si `prefers-reduced-motion: reduce` ou si l'URL contient une ancre ;
+- n'est pas jouée si l'URL contient une ancre ;
+- avec `prefers-reduced-motion: reduce`, est jouée sans fondu de sortie ni curseur clignotant ;
 - disparaît de force au bout de 8 s si quelque chose se passe mal ;
 - sans JS, l'écran d'intro n'existe pas : le site s'affiche directement.
 

@@ -10,8 +10,10 @@
   var reduceMotion = window.matchMedia &&
     window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // Pas d'intro si l'utilisateur ne veut pas d'animation ou arrive sur une ancre (#projets…).
-  var playIntro = !reduceMotion && !window.location.hash;
+  // Pas d'intro si on arrive sur une ancre (#projets…).
+  // Avec prefers-reduced-motion, l'intro est jouée quand même, mais sans fondu ni curseur clignotant
+  // (cf. FADE plus bas et le bloc « Motion » de style.css) : du texte qui s'affiche, rien qui bouge.
+  var playIntro = !window.location.hash;
 
   // Filet de sécurité : quoi qu'il arrive, l'écran d'intro disparaît au bout de 8 s.
   var failsafe = null;
@@ -27,7 +29,7 @@
   var CMD_PAUSE = 450;   // pause après la commande, avant la réponse
   var LINE_DELAY = 380;  // ms entre chaque ligne de sortie
   var HOLD = 1800;       // temps de lecture de l'écran final avant de partir
-  var FADE = 500;        // durée du fondu de sortie (cf. .intro-screen dans style.css)
+  var FADE = reduceMotion ? 0 : 500; // durée du fondu de sortie (cf. .intro-screen dans style.css)
   // 400 + 14 × 85 + 450 + 4 × 380 + 1800 + 500 ≈ 5,9 s
 
   var SKIP_EVENTS = ['pointerdown', 'keydown', 'wheel', 'touchstart'];
